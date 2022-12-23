@@ -7,17 +7,32 @@ import (
 	"strings"
 )
 
+const queryDelim = "?"
+const schemeDelim = ":/"
+const pathRoot = "___"
+const pathTrailing = "____"
+
 // Convert a URL to a file path.
 func Convert(u *url.URL) (string, error) {
 	p := []string{}
 	if u.Scheme != "" || u.RawQuery != "" {
-		p = []string{url.PathEscape(fmt.Sprintf("?%s?%s:/", u.RawQuery, u.Scheme))}
+		p = []string{url.PathEscape(fmt.Sprintf("%s%s%s%s%s", queryDelim, u.RawQuery, queryDelim, u.Scheme, schemeDelim))}
 	}
 	if u.Host != "" {
 		p = append(p, url.PathEscape(u.Host))
 	}
 	if u.Path != "" {
-		for _, up := range strings.Split(u.Path, "/") {
+		splitted := strings.Split(u.Path, "/")
+		for i, up := range splitted {
+			if up == "" {
+				switch i {
+				case 0:
+					p = append(p, url.PathEscape(pathRoot))
+				case len(splitted) - 1:
+					p = append(p, url.PathEscape(pathTrailing))
+				}
+				continue
+			}
 			p = append(p, url.PathEscape(up))
 		}
 	}
@@ -28,15 +43,26 @@ func Convert(u *url.URL) (string, error) {
 func Restore(pathstr string) (*url.URL, error) {
 	uu := []string{}
 	var rq string
-	for _, pp := range strings.Split(pathstr, string(filepath.Separator)) {
+	for i, pp := range strings.Split(pathstr, string(filepath.Separator)) {
+		if pp == pathRoot {
+			switch i {
+			case 0, 1:
+				uu = append(uu, "")
+			}
+			continue
+		}
+		if pp == pathTrailing {
+			uu = append(uu, "")
+			continue
+		}
 		u, err := url.PathUnescape(pp)
 		if err != nil {
 			return nil, err
 		}
-		if strings.HasPrefix(u, "?") && strings.HasSuffix(u, ":/") {
-			splitted := strings.Split(u, "?")
+		if strings.HasPrefix(u, queryDelim) && strings.HasSuffix(u, schemeDelim) {
+			splitted := strings.Split(u, queryDelim)
 			rq = splitted[1]
-			if splitted[2] != ":/" {
+			if splitted[2] != schemeDelim {
 				uu = append(uu, splitted[2])
 			}
 			continue

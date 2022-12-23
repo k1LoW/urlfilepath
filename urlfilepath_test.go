@@ -12,10 +12,14 @@ func TestUrlfilepath(t *testing.T) {
 		urlstr string
 	}{
 		{"https://github.com/k1LoW/urlfilepath"},
+		{"https://github.com/k1LoW/urlfilepath/"},
 		{"https://api.github.com/repositories/1300192/issues?page=515"},
+		{"https://api.github.com/repositories/1300192/issues/?page=515"},
 		{"k1LoW/urlfilepath"},
+		{"/k1LoW/urlfilepath"},
 		{"repositories/1300192/issues?page=515"},
 		{"s3://testbucket/path/to/urlfilepath"},
+		{"file:///root/path/to/urlfilepath"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.urlstr, func(t *testing.T) {
