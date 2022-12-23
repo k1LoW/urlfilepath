@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// Convert a URL to a file path.
 func Convert(u *url.URL) (string, error) {
 	p := []string{}
 	if u.Scheme != "" || u.RawQuery != "" {
@@ -23,6 +24,7 @@ func Convert(u *url.URL) (string, error) {
 	return filepath.Join(p...), nil
 }
 
+// Restore a URL from a file path.
 func Restore(pathstr string) (*url.URL, error) {
 	uu := []string{}
 	var rq string
