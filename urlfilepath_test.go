@@ -9,7 +9,7 @@ import (
 	"github.com/k1LoW/urlfilepath"
 )
 
-func TestUrlfilepath(t *testing.T) {
+func TestEncodeAndDecode(t *testing.T) {
 	tests := []struct {
 		urlstr string
 	}{
