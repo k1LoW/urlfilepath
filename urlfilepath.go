@@ -7,10 +7,12 @@ import (
 	"strings"
 )
 
-const queryDelim = "?"
-const schemeDelim = ":/"
-const pathRoot = "___"
-const pathTrailing = "____"
+const (
+	queryDelim   = "?"
+	schemeDelim  = ":/"
+	pathRoot     = "___"
+	pathTrailing = "____"
+)
 
 // Encode a URL to a file path.
 func Encode(u *url.URL) (string, error) {
