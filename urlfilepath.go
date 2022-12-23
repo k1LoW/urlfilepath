@@ -16,10 +16,10 @@ const pathTrailing = "____"
 func Encode(u *url.URL) (string, error) {
 	p := []string{}
 	if u.Scheme != "" || u.RawQuery != "" {
-		p = []string{url.PathEscape(fmt.Sprintf("%s%s%s%s%s", queryDelim, u.RawQuery, queryDelim, u.Scheme, schemeDelim))}
+		p = []string{url.QueryEscape(fmt.Sprintf("%s%s%s%s%s", queryDelim, u.RawQuery, queryDelim, u.Scheme, schemeDelim))}
 	}
 	if u.Host != "" {
-		p = append(p, url.PathEscape(u.Host))
+		p = append(p, url.QueryEscape(u.Host))
 	}
 	if u.Path != "" {
 		splitted := strings.Split(u.Path, "/")
@@ -27,13 +27,13 @@ func Encode(u *url.URL) (string, error) {
 			if up == "" {
 				switch i {
 				case 0:
-					p = append(p, url.PathEscape(pathRoot))
+					p = append(p, url.QueryEscape(pathRoot))
 				case len(splitted) - 1:
-					p = append(p, url.PathEscape(pathTrailing))
+					p = append(p, url.QueryEscape(pathTrailing))
 				}
 				continue
 			}
-			p = append(p, url.PathEscape(up))
+			p = append(p, url.QueryEscape(up))
 		}
 	}
 	return filepath.Join(p...), nil
@@ -55,7 +55,7 @@ func Decode(pathstr string) (*url.URL, error) {
 			uu = append(uu, "")
 			continue
 		}
-		u, err := url.PathUnescape(pp)
+		u, err := url.QueryUnescape(pp)
 		if err != nil {
 			return nil, err
 		}
