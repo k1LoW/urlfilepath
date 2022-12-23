@@ -27,11 +27,11 @@ func TestUrlfilepath(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			pathstr, err := urlfilepath.Convert(u)
+			pathstr, err := urlfilepath.Encode(u)
 			if err != nil {
 				t.Error(err)
 			}
-			got, err := urlfilepath.Restore(pathstr)
+			got, err := urlfilepath.Decode(pathstr)
 			if err != nil {
 				t.Error(err)
 			}

@@ -12,8 +12,8 @@ const schemeDelim = ":/"
 const pathRoot = "___"
 const pathTrailing = "____"
 
-// Convert a URL to a file path.
-func Convert(u *url.URL) (string, error) {
+// Encode a URL to a file path.
+func Encode(u *url.URL) (string, error) {
 	p := []string{}
 	if u.Scheme != "" || u.RawQuery != "" {
 		p = []string{url.PathEscape(fmt.Sprintf("%s%s%s%s%s", queryDelim, u.RawQuery, queryDelim, u.Scheme, schemeDelim))}
@@ -39,8 +39,8 @@ func Convert(u *url.URL) (string, error) {
 	return filepath.Join(p...), nil
 }
 
-// Restore a URL from a file path.
-func Restore(pathstr string) (*url.URL, error) {
+// Decode a URL from a file path.
+func Decode(pathstr string) (*url.URL, error) {
 	uu := []string{}
 	var rq string
 	for i, pp := range strings.Split(pathstr, string(filepath.Separator)) {
